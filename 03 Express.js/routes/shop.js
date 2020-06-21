@@ -13,7 +13,14 @@ router.get("/", (req, res, next) => {
   //res.sendFile(path.join(rootDir, "views", "shop.html")); // shop.html
   const products = adminData.products;
 
-  res.render("shop", { prods: products, pageTitle: "EnriShop", path: "/" }); //using shop.pug
+  res.render("shop", {
+    prods: products,
+    pageTitle: "EnriShop",
+    path: "/",
+    hasProducts: products.length > 0, //bool value
+    activeShop: true,
+    productCSS: true,
+  }); //using shop.pug
 });
 
 router.get("/shop", (req, res, next) => {
