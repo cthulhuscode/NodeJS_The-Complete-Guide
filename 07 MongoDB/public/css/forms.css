@@ -1,0 +1,49 @@
+/*
+    -- COLORS --
+
+ #Primary
+    #ff4f6c
+
+    #c60041
+
+    #ff849a
+
+#Secondary 
+  #ffd180
+
+  #caa052
+
+  #ffffb1
+
+#Tertiary
+    #ff8a80
+
+    #c85a54
+
+    #ffbcaf
+*/
+
+.form-control {
+    margin: 1rem 0;
+}
+
+.form-control label,
+.form-control input,
+.form-control textarea {
+    color: #c60041;
+    display: block;
+    width: 100%;
+    margin-bottom: 0.25rem;
+}
+
+.form-control input,
+.form-control textarea {
+    border: 1px solid #a1a1a1;
+    font: inherit;
+    border-radius: 2px;
+}
+
+.form-control input:focus,
+.form-control textarea:focus {
+    outline-color: #ff849a;
+}
