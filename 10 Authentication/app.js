@@ -5,6 +5,9 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session); //pasar la variable session
+const flash = require("connect-flash");
+//CSRF attacks protection
+const csrf = require("csurf");
 
 //dotenv config
 dotenv.config({ path: "./config/config.env" });
@@ -26,6 +29,9 @@ const store = new MongoDBStore({
     collection: "sessions",
 });
 
+//Initialize the CSRF protection
+const csrfProtection = csrf();
+
 app.set("view engine", "ejs");
 app.set("views", "views");
 
@@ -36,6 +42,7 @@ const authRoutes = require("./routes/auth");
 //Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+//Sessions
 app.use(
     session({
         secret: process.env.SESSION_SECRET, //the secret for signing the hash, that secretly store an ID
@@ -45,6 +52,11 @@ app.use(
         //cookie: {maxAge: '', expires: ''}
     })
 );
+//After initialize the session add CSRF protection
+app.use(csrfProtection);
+
+//connect-flash must be used after making the session
+app.use(flash());
 
 app.use((req, res, next) => {
     //Take the user from the session
@@ -56,6 +68,14 @@ app.use((req, res, next) => {
             next();
         })
         .catch((err) => console.log(err));
+});
+
+//Locals: Local variables that are passed into the views
+//They will ony exists in the views which are rendered
+app.use((req, res, next) => {
+    res.locals.isAuthenticated = req.session.isLoggedIn;
+    res.locals.csrfToken = req.csrfToken();
+    next();
 });
 
 app.use("/admin", adminRoutes);
@@ -70,19 +90,6 @@ mongoose
         useUnifiedTopology: true,
     })
     .then((result) => {
-        User.findOne().then((user) => {
-            if (!user) {
-                const user = new User({
-                    name: "Enri",
-                    email: "enridev@gmail.com",
-                    cart: {
-                        items: [],
-                    },
-                });
-                user.save();
-            }
-        });
-
         app.listen(3000);
     })
     .catch((err) => console.log(err));
