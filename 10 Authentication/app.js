@@ -127,6 +127,7 @@ app.use(authRoutes);
 app.get("/500", errorController.get500);
 app.use(errorController.get404);
 
+/*
 app.use((error, req, res, next) => {
   //res.status(error.httpStatusCode).redirect("/500");
   console.log(req.session);
@@ -136,6 +137,7 @@ app.use((error, req, res, next) => {
     isAuthenticated: req.session.isLoggedIn,
   });
 });
+*/
 
 mongoose
   .connect(MONGODB_URI, {
